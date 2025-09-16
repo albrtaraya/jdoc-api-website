@@ -53,7 +53,9 @@ export default function PricingPage() {
                 </li>
               </ul>
               <Button className="w-full bg-transparent" variant="outline">
-                Download Template
+                <a href="https://github.com/JTemplates/JDoc-API/blob/main/INSTALL.md" target="_blank" rel="noopener noreferrer">
+                  Download Template
+                </a>
               </Button>
             </CardContent>
           </Card>
