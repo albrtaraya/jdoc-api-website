@@ -69,13 +69,13 @@ export const ExampleGetUsers = {
             field: "limit",
             type: "number",
             required: false,
-            description: ["Número máximo de usuarios por página"],
+            description: ["Maximum number of users per page"],
         },
         {
             field: "page",
             type: "number",
             required: false,
-            description: ["Número de página para la paginación"],
+            description: ["Page number for pagination"],
         },
     ],
 };

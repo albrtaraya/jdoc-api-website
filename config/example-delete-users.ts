@@ -51,7 +51,7 @@ export const ExampleDeleteUser = {
             field: "userId",
             type: "string",
             required: true,
-            description: ["ID del usuario a eliminar", "no puede ser el usuario autenticado actual"],
+            description: ["ID of the user to delete", "Cannot be the current authenticated user"],
         },
     ],
 };
