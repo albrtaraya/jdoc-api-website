@@ -8,8 +8,7 @@ export function Header() {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-8">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl">{headerConfig.logo.icon}</span>
-            <span className="text-xl font-semibold text-gray-900">{headerConfig.logo.text}</span>
+            <img src="/logo.webp" className="w-40" />
           </Link>
           <nav className="hidden md:flex space-x-6">
             {headerConfig.options.map((option) => (
