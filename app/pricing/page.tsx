@@ -97,7 +97,7 @@ export default function PricingPage() {
                 </li>
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-blue-500 mr-3" />
-                  <span>Sorpresas empresariales</span>
+                  <span>Other surprises</span>
                 </li>
               </ul>
               <Button className="w-full" disabled>
