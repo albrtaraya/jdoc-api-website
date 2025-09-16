@@ -1,7 +1,6 @@
 export const headerConfig = {
   logo: {
-    text: "JDoc-API",
-    icon: "",
+    url: "/logo.webp",
   },
   options: [
     { label: "Home", url: "/" },

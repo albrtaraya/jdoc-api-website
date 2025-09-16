@@ -7,6 +7,11 @@ import { ExamplePatchUser } from "./example-patch-uers";
 import { ExamplePutUser } from "./example-put-users";
 import { ExamplePostUser } from "./example-post-users";
 import { GettingStarted } from "./get-started";
+import { ConfigurationFiles } from "./configuration-files";
+import { ExampleFileUpload } from "./example-file-upload";
+import { ExampleSearchAPI } from "./example-search-api";
+import { ExampleWebhook } from "./example-webhook";
+import { ExamplePaginationAPI } from "./example-pagination-api";
 
 export const Slidebar = [
     {
@@ -20,6 +25,12 @@ export const Slidebar = [
         title: "Documentation Guide",
         type: "section",
         descriptiveConfig: DocumentationGuide,
+    },
+    {
+        id: "configuration-files",
+        title: "Configurations Files",
+        type: "section",
+        descriptiveConfig: ConfigurationFiles,
     },
     {
         id: "examples",
@@ -55,6 +66,26 @@ export const Slidebar = [
                 id: "delete-users",
                 title: "DELETE - Users",
                 config: ExampleDeleteUser,
+            },
+            {
+                id: "file-upload",
+                title: "FILE - UPLOAD",
+                config: ExampleFileUpload,
+            },
+            {
+                id: "search-api",
+                title: "SEARCH - API",
+                config: ExampleSearchAPI,
+            },
+            {
+                id: "webhook",
+                title: "WEBHOOKS",
+                config: ExampleWebhook,
+            },
+            {
+                id: "pagination-api",
+                title: "PAGINATION",
+                config: ExamplePaginationAPI,
             },
         ],
     },

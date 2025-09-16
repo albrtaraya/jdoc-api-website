@@ -123,3 +123,51 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide main body scrollbar but keep scroll functionality */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+/* Firefox scrollbar styling for body */
+html,
+body {
+  scrollbar-width: none;
+}
+
+/* Keep normal scrollbars for other elements */
+:not(html):not(body)::-webkit-scrollbar {
+  width: auto;
+  height: auto;
+}
+
+:not(html):not(body)::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:not(html):not(body)::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+:not(html):not(body)::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Firefox scrollbar styling for other elements */
+:not(html):not(body) {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
