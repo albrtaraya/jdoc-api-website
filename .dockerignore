@@ -1,0 +1,16 @@
+# Ignorar node_modules y build locales
+node_modules
+.next
+dist
+build
+coverage
+
+# Archivos temporales o de entorno
+.env*
+*.log
+.vscode
+.idea
+.DS_Store
+
+# Ignorar git
+.git
