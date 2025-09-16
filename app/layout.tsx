@@ -9,6 +9,18 @@ export const metadata: Metadata = {
   description: 'JDoc-API is a modern, interactive API documentation platform that transforms your JSON configurations into beautifulJDoc-API is a modern, interactive API documentation platform that transforms your JSON configurations into beautiful, functional documentation websites. Built with Next.js, TypeScript, and Tailwind CSS for optimal performance and developer experience.',
   icons: {
     icon: '/logo.ico'
+  },
+  openGraph: {
+    title: 'JDoc-API Oficial Website',
+    description: 'JDoc-API is a modern, interactive API documentation platform that transforms your JSON configurations into beautifulJDoc-API is a modern, interactive API documentation platform that transforms your JSON configurations into beautiful, functional documentation websites. Built with Next.js, TypeScript, and Tailwind CSS for optimal performance and developer experience.',
+    images: ['/website.webp'],
+    type: 'website'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'JDoc-API Oficial Website',
+    description: 'JDoc-API is a modern, interactive API documentation platform that transforms your JSON configurations into beautifulJDoc-API is a modern, interactive API documentation platform that transforms your JSON configurations into beautiful, functional documentation websites. Built with Next.js, TypeScript, and Tailwind CSS for optimal performance and developer experience.',
+    images: ['/website.webp']
   }
 }
 
