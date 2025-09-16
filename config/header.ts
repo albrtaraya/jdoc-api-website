@@ -11,6 +11,6 @@ export const headerConfig = {
   ],
   socialLinks: {
     linkedin: "https://www.linkedin.com/in/albrtaraya/",
-    github: "https://github.com/darthstack",
+    github: "https://github.com/JTemplates/JDoc-API",
   },
 }
