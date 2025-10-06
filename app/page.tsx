@@ -12,7 +12,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="px-6 py-20">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6 text-balance">API Documentation Template</h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 text-balance">API Documentation Template</h1>
           <p className="text-xl text-gray-600 mb-8 text-pretty max-w-2xl mx-auto">
             Create beautiful, interactive API documentation using simple JSON configuration. No HTML, no complex setup -
             just pure simplicity.

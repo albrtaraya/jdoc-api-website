@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Label } from "@/components/ui/label"
-import { Copy } from "lucide-react"
+import { Copy, Menu, X, Code, FileText } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 interface CampoCaracteristica {
@@ -74,6 +74,8 @@ export function ApiDocumentation({ sections }: ApiDocumentationProps) {
   const [simulationResult, setSimulationResult] = useState<any>(null)
   const [isSimulating, setIsSimulating] = useState(false)
   const [activeTab, setActiveTab] = useState("HTTP")
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [showMobileCode, setShowMobileCode] = useState(false)
   const { toast } = useToast()
 
   const findActiveConfig = (
@@ -101,6 +103,7 @@ export function ApiDocumentation({ sections }: ApiDocumentationProps) {
   }
 
   const { apiConfig: activeConfig, descriptiveConfig: activeDescriptiveConfig } = findActiveConfig(sections)
+
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
@@ -206,41 +209,101 @@ export function ApiDocumentation({ sections }: ApiDocumentationProps) {
   }
 
   const renderSidebar = () => (
-    <div className="w-64 bg-gray-100 border-r border-gray-200 h-screen overflow-y-auto">
-      <div className="p-4">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">API Documentation</h2>
-        <nav className="space-y-1">
-          {sections.map((section) => (
-            <div key={section.id}>
-              {section.type === "group" ? (
-                <div>
-                  <div className="text-sm font-medium text-gray-900 py-2 px-3 bg-gray-200 rounded">{section.title}</div>
-                  {section.children?.map((child) => (
+    <>
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block w-64 bg-gray-100 border-r border-gray-200 h-screen overflow-y-auto">
+        <div className="p-4">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">API Documentation</h2>
+          <nav className="space-y-1">
+            {sections.map((section) => (
+              <div key={section.id}>
+                {section.type === "group" ? (
+                  <div>
+                    <div className="text-sm font-medium text-gray-900 py-2 px-3 bg-gray-200 rounded">{section.title}</div>
+                    {section.children?.map((child) => (
+                      <button
+                        key={child.id}
+                        onClick={() => setActiveSection(child.id)}
+                        className={`w-full text-left text-sm py-2 px-6 hover:bg-gray-200 rounded ${activeSection === child.id ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-700"
+                          }`}
+                      >
+                        {child.title}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <button
+                    key={section.id}
+                    onClick={() => setActiveSection(section.id)}
+                    className={`w-full text-left text-sm py-2 px-3 hover:bg-gray-200 rounded ${activeSection === section.id ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-700"
+                      }`}
+                  >
+                    {section.title}
+                  </button>
+                )}
+              </div>
+            ))}
+          </nav>
+        </div>
+      </div>
+
+      {/* Mobile Sidebar */}
+      <div className={`md:hidden fixed top-0 right-0 h-full w-full bg-gray-100 transform transition-transform duration-300 ease-in-out z-50 ${
+        isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}>
+        <div className="p-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">API Documentation</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-1"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+          <div className="overflow-y-auto h-full pb-20">
+            <nav className="space-y-1">
+              {sections.map((section) => (
+                <div key={section.id}>
+                  {section.type === "group" ? (
+                    <div>
+                      <div className="text-sm font-medium text-gray-900 py-2 px-3 bg-gray-200 rounded">{section.title}</div>
+                      {section.children?.map((child) => (
+                        <button
+                          key={child.id}
+                          onClick={() => {
+                            setActiveSection(child.id)
+                            setIsMobileMenuOpen(false)
+                          }}
+                          className={`w-full text-left text-sm py-3 px-6 hover:bg-gray-200 rounded ${activeSection === child.id ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-700"
+                            }`}
+                        >
+                          {child.title}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
                     <button
-                      key={child.id}
-                      onClick={() => setActiveSection(child.id)}
-                      className={`w-full text-left text-sm py-2 px-6 hover:bg-gray-200 rounded ${activeSection === child.id ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-700"
+                      key={section.id}
+                      onClick={() => {
+                        setActiveSection(section.id)
+                        setIsMobileMenuOpen(false)
+                      }}
+                      className={`w-full text-left text-sm py-3 px-3 hover:bg-gray-200 rounded ${activeSection === section.id ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-700"
                         }`}
                     >
-                      {child.title}
+                      {section.title}
                     </button>
-                  ))}
+                  )}
                 </div>
-              ) : (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className={`w-full text-left text-sm py-2 px-3 hover:bg-gray-200 rounded ${activeSection === section.id ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-700"
-                    }`}
-                >
-                  {section.title}
-                </button>
-              )}
-            </div>
-          ))}
-        </nav>
+              ))}
+            </nav>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   )
 
   const renderContentItem = (item: ContentItem, index: number) => {
@@ -447,7 +510,7 @@ ${goHeaders}
     if (!activeConfig) return null
 
     return (
-      <div className="w-[400px] bg-gray-900 text-white h-screen overflow-y-auto flex-shrink-0">
+      <div className="hidden lg:block w-[400px] bg-gray-900 text-white h-screen overflow-y-auto flex-shrink-0">
         <div className="border-b border-gray-700">
           <div className="flex">
             {["HTTP", "JavaScript", "PHP", "Python", "Go"].map((tab) => (
@@ -515,15 +578,30 @@ ${goHeaders}
   const renderMainContent = () => {
     if (activeDescriptiveConfig) {
       return (
-        <div className="w-full p-8 overflow-y-auto">
-          <div className="w-full">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{activeDescriptiveConfig.title}</h1>
-              <p className="text-lg text-gray-600 mb-6">{activeDescriptiveConfig.description}</p>
-            </div>
+        <div className="w-full overflow-y-auto">
+          {/* Mobile Header */}
+          <div className="md:hidden bg-white border-b border-gray-200 p-4 flex items-center justify-between sticky top-0 z-30">
+            <h1 className="text-lg font-semibold text-gray-900">API Documentation</h1>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-2"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
 
-            <div className="space-y-6">
-              {activeDescriptiveConfig.content.map((item, index) => renderContentItem(item, index))}
+          <div className="p-4 md:p-8">
+            <div className="w-full">
+              <div className="mb-8">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{activeDescriptiveConfig.title}</h1>
+                <p className="text-base md:text-lg text-gray-600 mb-6">{activeDescriptiveConfig.description}</p>
+              </div>
+
+              <div className="space-y-6">
+                {activeDescriptiveConfig.content.map((item, index) => renderContentItem(item, index))}
+              </div>
             </div>
           </div>
         </div>
@@ -532,203 +610,324 @@ ${goHeaders}
 
     if (!activeConfig) {
       return (
-        <div className="flex-1 p-8">
-          <div className="max-w-4xl">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">API Documentation</h1>
-            <p className="text-gray-600">Select an endpoint from the sidebar to view its documentation.</p>
+        <div className="flex-1 overflow-y-auto">
+          {/* Mobile Header */}
+          <div className="md:hidden bg-white border-b border-gray-200 p-4 flex items-center justify-between sticky top-0 z-30">
+            <h1 className="text-lg font-semibold text-gray-900">API Documentation</h1>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-2"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
+
+          <div className="p-4 md:p-8">
+            <div className="max-w-4xl">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">API Documentation</h1>
+              <p className="text-gray-600">Select an endpoint from the sidebar to view its documentation.</p>
+            </div>
           </div>
         </div>
       )
     }
 
     return (
-      <div className="flex-1 p-8 overflow-y-auto">
-        <div className="max-w-4xl">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{activeConfig.title.replace("API de ", "")}</h1>
-            <p className="text-lg text-gray-600 mb-4">{activeConfig.description}</p>
-
-            <div className="text-sm text-gray-500 mb-6">
-              GoSquared events are a versatile way of tracking anything that is happening on your site or app. User
-              actions, application errors, state transitions, and activity of all kinds can be tracked as an event.
-            </div>
-
-            <div className="text-sm text-gray-500 mb-4">
-              Event names are searchable and displayed in{" "}
-              <a href="#" className="text-blue-600 hover:underline">
-                People Analytics
-              </a>
-              . Top events are aggregated by name in{" "}
-              <a href="#" className="text-blue-600 hover:underline">
-                Trends
-              </a>
-              .
-            </div>
-
-            <div className="text-sm text-gray-500 mb-8">
-              Events are automatically associated with a user if given a{" "}
-              <code className="bg-gray-100 px-1 rounded">person_id</code>.
-            </div>
+      <div className="flex-1 overflow-y-auto">
+        {/* Mobile Header */}
+        <div className="md:hidden bg-white border-b border-gray-200 p-4 flex items-center justify-between sticky top-0 z-30">
+          <h1 className="text-lg font-semibold text-gray-900">API Documentation</h1>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowMobileCode(!showMobileCode)}
+              className="p-2"
+            >
+              {showMobileCode ? (
+                <FileText className="h-5 w-5" />
+              ) : (
+                <Code className="h-5 w-5" />
+              )}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-2"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
           </div>
-          {
-            activeConfig.characterJsonParamsSend.length > 0 ?
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Params</h2>
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-gray-50">
-                        <TableHead className="font-semibold">Parameter</TableHead>
-                        <TableHead className="font-semibold">Type</TableHead>
-                        <TableHead className="font-semibold">Required</TableHead>
-                        <TableHead className="font-semibold">Description</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {renderFieldsTable(activeConfig.characterJsonParamsSend)}
-                    </TableBody>
-                  </Table>
+        </div>
+
+        <div className="p-4 md:p-8">
+          <div className="max-w-4xl">
+            {!showMobileCode ? (
+              <>
+                <div className="mb-8">
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{activeConfig.title.replace("API de ", "")}</h1>
+                  <p className="text-base md:text-lg text-gray-600 mb-4">{activeConfig.description}</p>
+
+                  <div className="text-sm text-gray-500 mb-6">
+                    GoSquared events are a versatile way of tracking anything that is happening on your site or app. User
+                    actions, application errors, state transitions, and activity of all kinds can be tracked as an event.
+                  </div>
+
+                  <div className="text-sm text-gray-500 mb-4">
+                    Event names are searchable and displayed in{" "}
+                    <a href="#" className="text-blue-600 hover:underline">
+                      People Analytics
+                    </a>
+                    . Top events are aggregated by name in{" "}
+                    <a href="#" className="text-blue-600 hover:underline">
+                      Trends
+                    </a>
+                    .
+                  </div>
+
+                  <div className="text-sm text-gray-500 mb-8">
+                    Events are automatically associated with a user if given a{" "}
+                    <code className="bg-gray-100 px-1 rounded">person_id</code>.
+                  </div>
                 </div>
-              </div>
-              : <></>
-          }
+                {
+                  activeConfig.characterJsonParamsSend.length > 0 ?
+                    <div className="mb-8">
+                      <h2 className="text-xl font-semibold text-gray-900 mb-4">Params</h2>
+                      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="bg-gray-50">
+                              <TableHead className="font-semibold">Parameter</TableHead>
+                              <TableHead className="font-semibold">Type</TableHead>
+                              <TableHead className="font-semibold">Required</TableHead>
+                              <TableHead className="font-semibold">Description</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {renderFieldsTable(activeConfig.characterJsonParamsSend)}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </div>
+                    : <></>
+                }
 
-          {
-            activeConfig.characterJsonBodySend.length > 0 ?
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Body</h2>
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-gray-50">
-                        <TableHead className="font-semibold">Parameter</TableHead>
-                        <TableHead className="font-semibold">Type</TableHead>
-                        <TableHead className="font-semibold">Required</TableHead>
-                        <TableHead className="font-semibold">Description</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {renderFieldsTable(activeConfig.characterJsonBodySend)}
-                    </TableBody>
-                  </Table>
+                {
+                  activeConfig.characterJsonBodySend.length > 0 ?
+                    <div className="mb-8">
+                      <h2 className="text-xl font-semibold text-gray-900 mb-4">Body</h2>
+                      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="bg-gray-50">
+                              <TableHead className="font-semibold">Parameter</TableHead>
+                              <TableHead className="font-semibold">Type</TableHead>
+                              <TableHead className="font-semibold">Required</TableHead>
+                              <TableHead className="font-semibold">Description</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {renderFieldsTable(activeConfig.characterJsonBodySend)}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </div>
+                    : <></>}
+
+                {activeConfig.requirements.length > 0 && (
+                  <div className="mb-8">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Requirements</h2>
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <ul className="space-y-2">
+                        {activeConfig.requirements.map((req, index) => (
+                          <li key={index} className="flex items-start space-x-2">
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
+                            <span className="text-sm text-blue-800">{req.description}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-8">
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Valid Examples</h2>
+                    <div className="space-y-6">
+                      {activeConfig.validExamples.map((ejemplo, index) => (
+                        <div key={index} className="bg-white border border-gray-200 rounded-lg p-6">
+                          <h3 className="font-semibold text-lg mb-2">{ejemplo.title}</h3>
+                          <p className="text-gray-600 mb-4">{ejemplo.description}</p>
+
+                          <div className={"grid md:grid-cols-2 gap-4" + ejemplo.bodySend && "md:grid-cols-1"}>
+                            {
+                              ejemplo.bodySend &&
+                              <div>
+                                <div className="flex items-center justify-between mb-2">
+                                  <Label className="font-medium text-sm">Request</Label>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => copyToClipboard(JSON.stringify(ejemplo.bodySend, null, 2))}
+                                  >
+                                    <Copy className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                <pre className="bg-gray-50 p-3 rounded text-sm overflow-x-auto border">
+                                  {JSON.stringify(ejemplo.bodySend, null, 2)}
+                                </pre>
+                              </div>
+                            }
+
+                            <div>
+                              <div className="flex items-center justify-between mb-2">
+                                <Label className="font-medium text-sm">Response</Label>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => copyToClipboard(JSON.stringify(ejemplo.bodyResponse, null, 2))}
+                                >
+                                  <Copy className="h-4 w-4" />
+                                </Button>
+                              </div>
+                              <pre className="bg-green-50 p-3 rounded text-sm overflow-x-auto border border-green-200">
+                                {JSON.stringify(ejemplo.bodyResponse, null, 2)}
+                              </pre>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Error Examples</h2>
+                    <div className="space-y-6">
+                      {activeConfig.invalidExamples.map((ejemplo, index) => (
+                        <div key={index} className="bg-white border border-red-200 rounded-lg p-6">
+                          <h3 className="font-semibold text-lg mb-2 text-red-800">{ejemplo.title}</h3>
+                          <p className="text-gray-600 mb-4">{ejemplo.description}</p>
+
+                          <div className={"grid md:grid-cols-2 gap-4" + ejemplo.bodySend && "md:grid-cols-1"}>
+                            {
+                              ejemplo.bodySend &&
+                              <div>
+                                <div className="flex items-center justify-between mb-2">
+                                  <Label className="font-medium text-sm">Request</Label>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => copyToClipboard(JSON.stringify(ejemplo.bodySend, null, 2))}
+                                  >
+                                    <Copy className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                <pre className="bg-gray-50 p-3 rounded text-sm overflow-x-auto border">
+                                  {JSON.stringify(ejemplo.bodySend, null, 2)}
+                                </pre>
+                              </div>
+                            }
+
+                            <div>
+                              <div className="flex items-center justify-between mb-2">
+                                <Label className="font-medium text-sm">Error Response</Label>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => copyToClipboard(JSON.stringify(ejemplo.bodyResponse, null, 2))}
+                                >
+                                  <Copy className="h-4 w-4" />
+                                </Button>
+                              </div>
+                              <pre className="bg-red-50 p-3 rounded text-sm overflow-x-auto border border-red-200">
+                                {JSON.stringify(ejemplo.bodyResponse, null, 2)}
+                              </pre>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              : <></>}
+              </>
+            ) : (
+              /* Mobile Code Examples - Replace content */
+              <div className="lg:hidden">
+                <div className="mb-6">
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Code Examples</h1>
+                  <p className="text-base md:text-lg text-gray-600 mb-4">
+                    {activeConfig.title.replace("API de ", "")} - Implementation examples
+                  </p>
+                </div>
 
-          {activeConfig.requirements.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Requirements</h2>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <ul className="space-y-2">
-                  {activeConfig.requirements.map((req, index) => (
-                    <li key={index} className="flex items-start space-x-2">
-                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-sm text-blue-800">{req.description}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
+                <div className="bg-gray-900 text-white rounded-lg overflow-hidden">
+                  <div className="border-b border-gray-700">
+                    <div className="flex overflow-x-auto">
+                      {["HTTP", "JavaScript", "PHP", "Python", "Go"].map((tab) => (
+                        <button
+                          key={tab}
+                          onClick={() => setActiveTab(tab)}
+                          className={`px-4 py-3 text-sm font-medium whitespace-nowrap ${activeTab === tab
+                            ? "bg-gray-800 text-white border-b-2 border-blue-400"
+                            : "text-gray-400 hover:text-white"
+                            }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Valid Examples</h2>
-              <div className="space-y-6">
-                {activeConfig.validExamples.map((ejemplo, index) => (
-                  <div key={index} className="bg-white border border-gray-200 rounded-lg p-6">
-                    <h3 className="font-semibold text-lg mb-2">{ejemplo.title}</h3>
-                    <p className="text-gray-600 mb-4">{ejemplo.description}</p>
-
-                    <div className={"grid md:grid-cols-2 gap-4" + ejemplo.bodySend && "md:grid-cols-1"}>
-                      {
-                        ejemplo.bodySend &&
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <Label className="font-medium text-sm">Request</Label>
+                  <div className="p-4 space-y-6">
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-300 mb-3">Definition</h3>
+                      <div className="bg-gray-800 rounded p-3">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Badge className="bg-blue-600 text-white text-xs">{activeConfig.method}</Badge>
+                          <div className="flex items-center space-x-2 flex-1 min-w-0">
+                            <span className="text-sm font-mono truncate" title={activeConfig.urlDefinition}>
+                              {activeConfig.urlDefinition}
+                            </span>
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => copyToClipboard(JSON.stringify(ejemplo.bodySend, null, 2))}
+                              className="h-6 w-6 p-0 text-gray-400 hover:text-white flex-shrink-0"
+                              onClick={() => copyToClipboard(activeConfig.urlDefinition)}
                             >
-                              <Copy className="h-4 w-4" />
+                              <Copy className="h-3 w-3" />
                             </Button>
                           </div>
-                          <pre className="bg-gray-50 p-3 rounded text-sm overflow-x-auto border">
-                            {JSON.stringify(ejemplo.bodySend, null, 2)}
-                          </pre>
                         </div>
-                      }
+                      </div>
+                    </div>
 
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <Label className="font-medium text-sm">Response</Label>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => copyToClipboard(JSON.stringify(ejemplo.bodyResponse, null, 2))}
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <pre className="bg-green-50 p-3 rounded text-sm overflow-x-auto border border-green-200">
-                          {JSON.stringify(ejemplo.bodyResponse, null, 2)}
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-300 mb-3">Example Request</h3>
+                      <div className="bg-gray-800 rounded p-3 overflow-x-auto">
+                        <pre className="text-xs text-green-400 whitespace-pre-wrap">
+                          {generateCodeExample(activeConfig, activeTab)}
                         </pre>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
 
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Error Examples</h2>
-              <div className="space-y-6">
-                {activeConfig.invalidExamples.map((ejemplo, index) => (
-                  <div key={index} className="bg-white border border-red-200 rounded-lg p-6">
-                    <h3 className="font-semibold text-lg mb-2 text-red-800">{ejemplo.title}</h3>
-                    <p className="text-gray-600 mb-4">{ejemplo.description}</p>
-
-                    <div className={"grid md:grid-cols-2 gap-4" + ejemplo.bodySend && "md:grid-cols-1"}>
-                      {
-                        ejemplo.bodySend &&
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <Label className="font-medium text-sm">Request</Label>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => copyToClipboard(JSON.stringify(ejemplo.bodySend, null, 2))}
-                            >
-                              <Copy className="h-4 w-4" />
-                            </Button>
-                          </div>
-                          <pre className="bg-gray-50 p-3 rounded text-sm overflow-x-auto border">
-                            {JSON.stringify(ejemplo.bodySend, null, 2)}
+                    {activeConfig.validExamples[0] && (
+                      <div>
+                        <h3 className="text-sm font-semibold text-gray-300 mb-3">Example Response</h3>
+                        <div className="bg-gray-800 rounded p-3 overflow-x-auto">
+                          <pre className="text-xs text-blue-400">
+                            {JSON.stringify(activeConfig.validExamples[0].bodyResponse, null, 2)}
                           </pre>
                         </div>
-                      }
-
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <Label className="font-medium text-sm">Error Response</Label>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => copyToClipboard(JSON.stringify(ejemplo.bodyResponse, null, 2))}
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <pre className="bg-red-50 p-3 rounded text-sm overflow-x-auto border border-red-200">
-                          {JSON.stringify(ejemplo.bodyResponse, null, 2)}
-                        </pre>
                       </div>
-                    </div>
+                    )}
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -736,10 +935,12 @@ ${goHeaders}
   }
 
   return (
-    <div className="flex w-screen h-screen bg-white">
-      {renderSidebar()}
-      {renderMainContent()}
-      {activeConfig && renderCodePanel()}
+    <div className="relative w-screen h-screen bg-white">
+      <div className="flex h-full">
+        {renderSidebar()}
+        {renderMainContent()}
+        {activeConfig && renderCodePanel()}
+      </div>
     </div>
   )
 }
